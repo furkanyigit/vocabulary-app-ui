@@ -1,12 +1,15 @@
+
 import './App.css';
-import Dashboard from './components/Dashboard';
+import Dashboard from './template/Dashboard';
 
 function App() {
   return (
     <div className="App">
       <Dashboard></Dashboard>
     </div>
+
   );
 }
+
 
 export default App;
