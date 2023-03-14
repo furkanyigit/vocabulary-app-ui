@@ -12,28 +12,21 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import { mainListItems} from './listItems';
+import { Routes, Route } from 'react-router-dom';
+import Home from '../components/Home';
+import VocabHome from '../components/VocabHome';
+import VocabularyAdd from '../components/VocabularyAdd';
+import Practic from '../components/Practic';
+import FirstBox from '../box/FirstBox';
+import SecondBox from '../box/SecondBox';
+import ThirdBox from '../box/ThirdBox';
+import VocabularyList from '../components/VocabularyList';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const drawerWidth = 240;
 
@@ -91,7 +84,7 @@ function DashboardContent() {
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent:'center' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -118,7 +111,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Dashboard 
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -139,65 +132,41 @@ function DashboardContent() {
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
-          </Toolbar>
+          </Toolbar> 
           <Divider />
-          <List component="nav">
+          <List component="nav"> {/*sidebar böülüm ikinci list kaldırıldı 1. list*/}
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
           </List>
         </Drawer>
         <Box
           component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
+          sx={{ 
+             backgroundColor: (theme) =>  theme.palette.mode === 'light' ? theme.palette.grey[100]  : theme.palette.grey[900], flexGrow: 1, height: '100vh',  overflow: 'auto',
+            }}   >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+          <Container className='DashboardMiddleContainer'>
+            <Grid className='DashboardMiddleMainGrid'>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
+              <Grid className='DashboardMiddleGrid'>
+                <div
+                  // sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 10000, }}
                 >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
+                  <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/vocabHome" element={<VocabHome/>}/>
+                    <Route path='/practic' element={<Practic/>}/>
+                    <Route path='/vocabularyAdd' element={<VocabularyAdd/>} />
+                    <Route path='/vocabularyList' element={<VocabularyList/>} />
+                    <Route path="/firstbox" element={<FirstBox/>}/>
+                    <Route path='/secondbox' element={<SecondBox/>}/>
+                    <Route path='/thirdbox' element={<ThirdBox/>} />
+                  </Routes>
+                </div>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
-        </Box>
+        </Box >
       </Box>
     </ThemeProvider>
   );
