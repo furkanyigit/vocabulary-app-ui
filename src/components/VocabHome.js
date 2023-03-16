@@ -10,13 +10,14 @@ function VocabHome() {
                     Practic
                 </Box>
             </Link>
-            <Link to='/vocabularyAdd' className='VocabHomeLink'>
-                <Box className='VocabHomeBox' >
-                    Vocabulary Add 
+            <Link to='/vocabularyAdd' className='VocabHomeLink' >
+                <Box className='VocabHomeBox' sx={{backgroundColor: '#D1E9FC' }}>
+                    Vocabulary Add
+
                 </Box>
             </Link>
-            <Link to='/vocabularyList' className='VocabHomeLink'>
-                <Box className='VocabHomeBox' >
+            <Link to='/vocabularyList' className='VocabHomeLink' >
+                <Box className='VocabHomeBox' sx={{backgroundColor: 'red' }}>
                     Vocabulary List
                 </Box>
             </Link>      

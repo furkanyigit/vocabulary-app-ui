@@ -23,7 +23,7 @@ function VocabularyAdd() {
   return (
     <div className='VocabHomeDiv'>
       <div className='VocabHomeLink'>
-        <Box className='VocabHomeBox' >
+        <Box className='VocabHomeBox' sx={{backgroundColor: '#f4511e'}} >
             <div className='VocabularyAddBoxDiv'>
             <textarea typeof='text' className='VocabularyAddTextArea' value={word} onChange={(e) =>{setWord(e.target.value)}}> </textarea>
             <textarea typeof='text' className='VocabularyAddTextArea' value={wordEng} onChange={(e) =>{setWordEng(e.target.value)}}> </textarea>

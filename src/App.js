@@ -1,11 +1,14 @@
 
 import './App.css';
+import { GlobalProvider } from './context/GlobalState';
 import Dashboard from './template/Dashboard';
 
 function App() {
   return (
     <div className="App">
-      <Dashboard></Dashboard>
+      <GlobalProvider>
+        <Dashboard></Dashboard>
+      </GlobalProvider>
     </div>
 
   );
