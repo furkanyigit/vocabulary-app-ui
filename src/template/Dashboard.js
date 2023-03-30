@@ -15,7 +15,7 @@ import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems } from './listItems';
+import MainListItem from './MainListItem';
 import Home from '../components/Home';
 import VocabHome from '../components/VocabHome';
 import Practic from '../components/Practic';
@@ -24,6 +24,7 @@ import SecondBox from '../box/SecondBox';
 import ThirdBox from '../box/ThirdBox';
 import VocabularyList from '../components/VocabularyList';
 import { Route, Routes } from 'react-router-dom';
+
 
 const drawerWidth = 240;
 
@@ -132,7 +133,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItem></MainListItem>
             <Divider sx={{ my: 1 }} />
           </List>
         </Drawer>
