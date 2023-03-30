@@ -18,7 +18,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems } from './listItems';
 import Home from '../components/Home';
 import VocabHome from '../components/VocabHome';
-import VocabularyAdd from '../components/VocabularyAdd';
 import Practic from '../components/Practic';
 import FirstBox from '../box/FirstBox';
 import SecondBox from '../box/SecondBox';
@@ -162,7 +161,6 @@ function DashboardContent() {
                     <Route path="/" element={<Home />} />
                     <Route path="/vocabHome" element={<VocabHome />} />
                     <Route path='/practic' element={<Practic />} />
-                    <Route path='/vocabularyAdd' element={<VocabularyAdd />} />
                     <Route path='/vocabularyList' element={<VocabularyList />} />
                     <Route path="/firstbox" element={<FirstBox />} />
                     <Route path='/secondbox' element={<SecondBox />} />
