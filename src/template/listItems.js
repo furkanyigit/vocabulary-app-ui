@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 
 export const mainListItems = (
+
   <React.Fragment>
     <Link to="/" className='Link'>
       <ListItemButton>
@@ -18,13 +19,17 @@ export const mainListItems = (
         <ListItemText primary="Home" />
       </ListItemButton>
     </Link>
+
+
     <Link to="/vocabHome" className='Link'>
       <ListItemButton>
         <ListItemIcon>
           <AppsIcon />
         </ListItemIcon>
-        <ListItemText primary="Applications" />
+        <ListItemText primary="Applications"></ListItemText>
       </ListItemButton>
     </Link>
+
+    
   </React.Fragment>
 );

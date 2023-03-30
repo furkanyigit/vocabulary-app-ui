@@ -15,8 +15,7 @@ import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems} from './listItems';
-import { Routes, Route } from 'react-router-dom';
+import { mainListItems } from './listItems';
 import Home from '../components/Home';
 import VocabHome from '../components/VocabHome';
 import VocabularyAdd from '../components/VocabularyAdd';
@@ -25,8 +24,7 @@ import FirstBox from '../box/FirstBox';
 import SecondBox from '../box/SecondBox';
 import ThirdBox from '../box/ThirdBox';
 import VocabularyList from '../components/VocabularyList';
-
-
+import { Route, Routes } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -84,7 +82,7 @@ function DashboardContent() {
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent:'center' }}>
+      <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -111,7 +109,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard 
+              Dashboard
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -132,46 +130,54 @@ function DashboardContent() {
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
-          </Toolbar> 
+          </Toolbar>
           <Divider />
-          <List component="nav"> {/*sidebar böülüm ikinci list kaldırıldı 1. list*/}
+          <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
           </List>
         </Drawer>
         <Box
           component="main"
-          sx={{ 
-             backgroundColor: (theme) =>  theme.palette.mode === 'light' ? theme.palette.grey[100]  : theme.palette.grey[900], flexGrow: 1, height: '100vh',  overflow: 'auto',
-            }}   >
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+          }}
+        >
           <Toolbar />
-          <Container className='DashboardMiddleContainer'>
-            <Grid className='DashboardMiddleMainGrid'>
+          <Container className='DashboardMiddleContainer' maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: 'white' }}>
+            <Grid className='DashboardMiddleMainGrid' container spacing={3}>
               {/* Chart */}
-              <Grid className='DashboardMiddleGrid'>
+              <Grid >
+
                 <div
-                  // sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 10000, }}
+                // sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 10000, }}
                 >
                   <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/vocabHome" element={<VocabHome/>}/>
-                    <Route path='/practic' element={<Practic/>}/>
-                    <Route path='/vocabularyAdd' element={<VocabularyAdd/>} />
-                    <Route path='/vocabularyList' element={<VocabularyList/>} />
-                    <Route path="/firstbox" element={<FirstBox/>}/>
-                    <Route path='/secondbox' element={<SecondBox/>}/>
-                    <Route path='/thirdbox' element={<ThirdBox/>} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/vocabHome" element={<VocabHome />} />
+                    <Route path='/practic' element={<Practic />} />
+                    <Route path='/vocabularyAdd' element={<VocabularyAdd />} />
+                    <Route path='/vocabularyList' element={<VocabularyList />} />
+                    <Route path="/firstbox" element={<FirstBox />} />
+                    <Route path='/secondbox' element={<SecondBox />} />
+                    <Route path='/thirdbox' element={<ThirdBox />} />
                   </Routes>
                 </div>
+
               </Grid>
             </Grid>
           </Container>
-        </Box >
+        </Box>
       </Box>
     </ThemeProvider>
   );
 }
-
 export default function Dashboard() {
   return <DashboardContent />;
 }

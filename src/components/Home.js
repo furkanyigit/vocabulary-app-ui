@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-function Home () {
+function Home() {
+
     return (
         <div>
-            Home Page
+
         </div>
     )
 }

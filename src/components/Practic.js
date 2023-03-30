@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Practic() {
   return (
-    <div className='VocabHomeDiv'>
+    <div className='VocabHomeDiv' >
     <Link to='/firstbox' className='VocabHomeLink'>
             <Box className='VocabHomeBox' >
                 First Box
