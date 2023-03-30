@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { Box } from '@mui/system';
 import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 function VocabHome() {
     return (
         <div className='VocabHomeDiv'>
         <Link to='/practic' className='VocabHomeLink'>
-                <Box className='VocabHomeBox' >
+                <Button variant='outlined'  >
                     Practic
-                </Box>
+                </Button>
             </Link>
             <Link to='/vocabularyAdd' className='VocabHomeLink' >
-                <Box className='VocabHomeBox' sx={{backgroundColor: '#D1E9FC' }}>
+                <Button variant='outlined'>
                     Vocabulary Add
 
-                </Box>
+                </Button>
             </Link>
             <Link to='/vocabularyList' className='VocabHomeLink' >
-                <Box className='VocabHomeBox' sx={{backgroundColor: 'red' }}>
+                <Button variant='outlined'>
                     Vocabulary List
-                </Box>
+                </Button>
             </Link>      
         </div>
 

@@ -6,6 +6,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import AppsIcon from '@mui/icons-material/Apps';
 import { Link } from 'react-router-dom';
 
+
+
 export const mainListItems = (
 
   <React.Fragment>
@@ -27,5 +29,7 @@ export const mainListItems = (
         <ListItemText primary="Applications"></ListItemText>
       </ListItemButton>
     </Link>
+
+    
   </React.Fragment>
 );
