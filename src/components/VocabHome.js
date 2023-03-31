@@ -58,24 +58,10 @@ function VocabHome() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            <Box
-                                component="form"
-                                sx={{
-                                    '& > :not(style)': { m: 1, width: '25ch' },
-                                }}
-                                noValidate
-                                autoComplete="off"
-                            >
+                            <Box component="form"    sx={{ '& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
                                 <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
                             </Box>
-                            <Box
-                                component="form"
-                                sx={{
-                                    '& > :not(style)': { m: 1, width: '25ch' },
-                                }}
-                                noValidate
-                                autoComplete="off"
-                            >
+                            <Box component="form"sx={{    '& > :not(style)': { m: 1, width: '25ch' },  }} noValidate autoComplete="off" >
                                 <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
                             </Box>
                         </DialogContentText>

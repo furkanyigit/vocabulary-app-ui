@@ -93,13 +93,32 @@ TablePaginationActions.propTypes = {
 
 const rows = wordList.length;
 
-function VocabularyList () {
+function VocabularyList() {
   const { wordList } = useContext(GlobalContext);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [word, setWord] = useState('')
   const [wordEng, setWordEng] = useState('')
   const [open, setOpen] = useState(false);
+  const [sayı1, setSayı1] = useState();
+  const [sayı2, setSayı2] = useState();
+  const [vocablistList, setVocabList] = useState([]);
+
+  const selectBox1 = () => {
+    setSayı1(0);
+    setSayı2(3)
+  }
+  const selectBox2 = () => {
+    setSayı1(3);
+    setSayı2(6)
+  }
+  const selectBox3 = () => {
+    setSayı1(6);
+    setSayı2(9)
+  }
+  console.log(sayı1)
+  console.log(sayı2)
+
 
   const handleClickOpen = () => {
     console.log(open)
@@ -107,7 +126,6 @@ function VocabularyList () {
 
     console.log("tiklandi")
   };
-  console.log(open)
 
   const handleClose = () => {
     setOpen(false);
@@ -116,12 +134,12 @@ function VocabularyList () {
   const handleClickAdd = (id) => {
     let vocabulary = { word, wordEng }
     fetch(`http://localhost:8095/vocabulary/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(vocabulary)
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(vocabulary)
     })
     handleClose();
   };
@@ -140,27 +158,50 @@ function VocabularyList () {
     setPage(0);
   };
 
+
+
   return (
 
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
-        <TableBody>
-          {(rowsPerPage > 0
-            ? wordList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : wordList
-          ).map((row) => (
-            <TableRow key={row.id}>
-              <TableCell component="th" scope="row">
-                {row.word}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.wordEng}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.count}
-              </TableCell>
-              <TableCell align="right">
-                <EditIcon style={{ width: 50 }} onClick={handleClickOpen}></EditIcon>
+    <>
+      <div className='VocabHomeDiv' >
+        <div to='/firstbox' className='VocabHomeLink'>
+          <Box className='VocabHomeBox' onClick={selectBox1} >
+            First Box
+          </Box>
+        </div>
+        <div to='/secondbox' className='VocabHomeLink'>
+          <Box className='VocabHomeBox' onClick={selectBox2} >
+            Second Box
+          </Box>
+        </div>
+        <div to='/thirdbox' className='VocabHomeLink'>
+          <Box className='VocabHomeBox' onClick={selectBox3} >
+            Third Box
+          </Box>
+        </div>
+      </div>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
+          <TableBody>
+            { 
+              (rowsPerPage > 0
+                ? wordList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : wordList
+              ).map((row) => { 
+                if(sayı1 <= row.count && row.count < sayı2){
+                  return(
+                <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.word}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                  {row.wordEng}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                  {row.count}
+                </TableCell>
+                <TableCell align="right">
+                  <EditIcon style={{ width: 50 }} onClick={handleClickOpen}></EditIcon>
                   <Dialog
                     open={open}
                     onClose={handleClose}
@@ -172,26 +213,26 @@ function VocabularyList () {
                     </DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                      <Box
-                                component="form"
-                                sx={{
-                                    '& > :not(style)': { m: 1, width: '25ch' },
-                                }}
-                                noValidate
-                                autoComplete="off"
-                            >
-                                <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
-                            </Box>
-                            <Box
-                                component="form"
-                                sx={{
-                                    '& > :not(style)': { m: 1, width: '25ch' },
-                                }}
-                                noValidate
-                                autoComplete="off"
-                            >
-                                <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
-                            </Box>
+                        <Box
+                          component="form"
+                          sx={{
+                            '& > :not(style)': { m: 1, width: '25ch' },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
+                        </Box>
+                        <Box
+                          component="form"
+                          sx={{
+                            '& > :not(style)': { m: 1, width: '25ch' },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
+                        </Box>
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -201,40 +242,41 @@ function VocabularyList () {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
-              </TableCell>
+                  <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
+                </TableCell>
+              </TableRow>
+                  )
+              }})}
+              
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                colSpan={3}
+                count={wordList.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </TableRow>
-          ))}
-
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={wordList.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'rows per page',
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 export default VocabularyList;
