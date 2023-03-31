@@ -1,78 +1,240 @@
-import { React } from 'react'
-import { Box } from '@mui/system';
-import Grid from '@mui/material/Grid';
-import { useContext } from 'react'
-import { GlobalContext } from '../context/GlobalState';
-import Button from '@mui/material/Button';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
+import TableFooter from '@mui/material/TableFooter';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import { useContext } from 'react'
+import { GlobalContext } from '../context/GlobalState';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import wordList from '../context/GlobalState';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useState } from 'react';
+import TextField from '@mui/material/TextField';
 
 
-function VocabularyList() {
-  const { wordList } = useContext(GlobalContext);
-  console.log(wordList)
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
 
-  // handleDeleteWord = (id) => {
-    
-  //   fetch (`ttp://localhost:8095/vocabulary/${id}`,{
-  //     method : 'DELETE'
-  //   }).then((result) => {
-      
-  //   })
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
 
-  // }
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
 
   return (
-    <div className='VocabHomeDiv'>
-      <Grid className='VocabHomeLink'>
-        <Box className='VocabHomeBox' sx={{ backgroundColor: '#880e4f' }}>
-          1. Box
-        </Box>
-      </Grid>
-      <Grid className='VocabHomeLink' >
-        <Box className='VocabHomeBox' sx={{ backgroundColor: '#388e3c' }}>
-          2. Box
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+}
 
-        </Box>
-      </Grid>
-      <Grid className='VocabHomeLink' >
-        <Box className='VocabHomeBox' sx={{ backgroundColor: '#4527a0' }}>
-          3. Box
-        </Box>
-      </Grid>
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
 
-      <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Word</TableCell>
-            <TableCell align="center">Word English</TableCell>
-            <TableCell align="center">Count</TableCell>
-            <TableCell align="right">Update/Delete</TableCell>
-          </TableRow>
-        </TableHead>
+const rows = wordList.length;
+
+function VocabularyList () {
+  const { wordList } = useContext(GlobalContext);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [word, setWord] = useState('')
+  const [wordEng, setWordEng] = useState('')
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    console.log(open)
+    setOpen(true);
+
+    console.log("tiklandi")
+  };
+  console.log(open)
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickAdd = (id) => {
+    let vocabulary = { word, wordEng }
+    fetch(`http://localhost:8095/vocabulary/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(vocabulary)
+    })
+    handleClose();
+  };
+
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  return (
+
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
         <TableBody>
-          {wordList.map((row) => (
-            <TableRow>
-              <TableCell align="center">{row.word}</TableCell>
-              <TableCell align="center">{row.wordEng}</TableCell>
-              <TableCell align="center">{row.count}</TableCell>
-              <TableCell align="right"><Button>Update</Button> / <Button
-              //  onClick={handleDeleteWord}
-               >Delete</Button></TableCell>
+          {(rowsPerPage > 0
+            ? wordList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : wordList
+          ).map((row) => (
+            <TableRow key={row.id}>
+              <TableCell component="th" scope="row">
+                {row.word}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="right">
+                {row.wordEng}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="right">
+                {row.count}
+              </TableCell>
+              <TableCell align="right">
+                <EditIcon style={{ width: 50 }} onClick={handleClickOpen}></EditIcon>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Vocabulary Update"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                      <Box
+                                component="form"
+                                sx={{
+                                    '& > :not(style)': { m: 1, width: '25ch' },
+                                }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
+                            </Box>
+                            <Box
+                                component="form"
+                                sx={{
+                                    '& > :not(style)': { m: 1, width: '25ch' },
+                                }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
+                            </Box>
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button onClick={handleClickAdd} autoFocus>
+                        Update
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
+              </TableCell>
             </TableRow>
           ))}
+
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={wordList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
     </TableContainer>
 
-    </div>
-  )
+  );
 }
-
-export default VocabularyList
+export default VocabularyList;

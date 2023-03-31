@@ -7,7 +7,8 @@ function App() {
   return (
     <div className="App">
       <GlobalProvider>
-        <Dashboard></Dashboard>
+        <Dashboard>
+        </Dashboard>
       </GlobalProvider>
     </div>
 

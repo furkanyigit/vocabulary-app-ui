@@ -33,6 +33,7 @@ function VocabHome() {
             },
             body: JSON.stringify(vocabulary)
         })
+        handleClose();
     };
 
     return (
