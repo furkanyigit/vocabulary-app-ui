@@ -150,7 +150,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container className='DashboardMiddleContainer' maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: 'white' }}>
+          <Container className='DashboardMiddleContainer' maxWidth="lg" sx={{ mt: 4, mb: 4,}}>
             <Grid className='DashboardMiddleMainGrid' container spacing={3}>
               {/* Chart */}
               <Grid >

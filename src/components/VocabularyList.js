@@ -116,8 +116,6 @@ function VocabularyList() {
     setSayı1(6);
     setSayı2(9)
   }
-  console.log(sayı1)
-  console.log(sayı2)
 
 
   const handleClickOpen = () => {
