@@ -9,15 +9,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import CreateUpdateModal from './CreateUpdateModal';
 
 function VocabHome() {
     const [word, setWord] = useState('')
     const [wordEng, setWordEng] = useState('')
     const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = () => {
         setOpen(false);
@@ -42,11 +39,11 @@ function VocabHome() {
                     Practic
                 </Button>
             </Link>
-
             <div className='VocabHomeLink'>
-                <Button variant="outlined" onClick={handleClickOpen}>
-                    Vocabulary Add
-                </Button>
+                <CreateUpdateModal
+                    type={1}
+                    header="Yeni Kelime Ekle"               
+                />
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -58,10 +55,10 @@ function VocabHome() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            <Box component="form"    sx={{ '& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
                                 <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
                             </Box>
-                            <Box component="form"sx={{    '& > :not(style)': { m: 1, width: '25ch' },  }} noValidate autoComplete="off" >
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
                                 <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
                             </Box>
                         </DialogContentText>
