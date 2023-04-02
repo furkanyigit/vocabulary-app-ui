@@ -8,7 +8,7 @@ export const GlobalProvider = (props) => {
 
     useEffect(() => {
         getVocabulary()
-    }, [])
+    }, )
 
 
 
