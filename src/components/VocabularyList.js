@@ -20,7 +20,6 @@ import { GlobalContext } from '../context/GlobalState';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import wordList from '../context/GlobalState';
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
 import CreateUpdateModal from './CreateUpdateModal';
 import Stack from '@mui/material/Stack';
 
@@ -94,8 +93,8 @@ function VocabularyList() {
   const [word, setWord] = useState('')
   const [wordEng, setWordEng] = useState('')
   const [open, setOpen] = useState(false);
-  const [sayı1, setSayı1] = useState();
-  const [sayı2, setSayı2] = useState();
+  const [sayı1, setSayı1] = useState(0);
+  const [sayı2, setSayı2] = useState(3);
 
   const selectBox1 = () => {
     setSayı1(0);
