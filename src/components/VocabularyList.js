@@ -22,6 +22,15 @@ import wordList from '../context/GlobalState';
 import { useState } from 'react';
 import CreateUpdateModal from './CreateUpdateModal';
 import Stack from '@mui/material/Stack';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -95,6 +104,12 @@ function VocabularyList() {
   const [open, setOpen] = useState(false);
   const [sayı1, setSayı1] = useState(0);
   const [sayı2, setSayı2] = useState(3);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
 
   const selectBox1 = () => {
     setSayı1(0);
@@ -108,7 +123,6 @@ function VocabularyList() {
     setSayı1(6);
     setSayı2(9)
   }
-
 
   const handleClickOpen = () => {
     console.log(open)
@@ -151,25 +165,17 @@ function VocabularyList() {
 
 
   return (
-
     <>
-      <div className='VocabHomeDiv' >
-        <div to='/firstbox' className='VocabHomeLink'>
-          <Box className='VocabHomeBox' onClick={selectBox1} >
-            First Box
-          </Box>
-        </div>
-        <div to='/secondbox' className='VocabHomeLink'>
-          <Box className='VocabHomeBox' onClick={selectBox2} >
-            Second Box
-          </Box>
-        </div>
-        <div to='/thirdbox' className='VocabHomeLink'>
-          <Box className='VocabHomeBox' onClick={selectBox3} >
-            Third Box
-          </Box>
-        </div>
-      </div>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Item One" {...a11yProps(0)} onClick={selectBox1} />
+            <Tab label="Item Two" {...a11yProps(1)} onClick={selectBox2} />
+            <Tab label="Item Three" {...a11yProps(2)} onClick={selectBox3} />
+          </Tabs>
+        </Box>
+      </Box>
+    
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
           <TableBody>
@@ -206,8 +212,8 @@ function VocabularyList() {
                   )
                 }
               })}
-
-            {emptyRows > 0 && (
+            
+            {emptyRows > 0  && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
