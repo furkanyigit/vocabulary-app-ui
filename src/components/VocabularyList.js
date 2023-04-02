@@ -24,6 +24,13 @@ import CreateUpdateModal from './CreateUpdateModal';
 import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useEffect } from 'react';
 
 function a11yProps(index) {
   return {
@@ -99,18 +106,48 @@ function VocabularyList() {
   const { wordList } = useContext(GlobalContext);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [willBeDeleteId, setWillBeDeleteId] = useState();
+  const [willBeDeleteWord, setWillBeDeleteWord] = useState();
+  const [willBeDeleteWordEnglish, setWillBeDeleteWordEnglish] = useState();
+  const [WillBeUpdateId, setWillBeUpdateId] = useState();
   const [word, setWord] = useState('')
   const [wordEng, setWordEng] = useState('')
-  const [open, setOpen] = useState(false);
+  //const [open, setOpen] = useState(false);
   const [sayı1, setSayı1] = useState(0);
   const [sayı2, setSayı2] = useState(3);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+
+
+
+  // Delete Form
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+
+  const deleteDialogOpen = (id,word, wordEng) => {
+    setDeleteDialog(true);
+    setWillBeDeleteWord(word);
+    setWillBeDeleteWordEnglish(wordEng);
+    setWillBeDeleteId(id);
+  };
+
+  const deleteDialogClose = () => {
+    setDeleteDialog(false);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const handleClickDelete = () => {
+    fetch(`http://localhost:8095/vocabulary/${willBeDeleteId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+    deleteDialogClose();
+  };
 
-
+  //Gösterilecek Box
   const selectBox1 = () => {
     setSayı1(0);
     setSayı2(3)
@@ -124,18 +161,7 @@ function VocabularyList() {
     setSayı2(9)
   }
 
-  const handleClickOpen = () => {
-    console.log(open)
-    setOpen(true);
-
-    console.log("tiklandi")
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleClickAdd = (id) => {
+  const handleClickUpdate = (id) => {
     let vocabulary = { word, wordEng }
     fetch(`http://localhost:8095/vocabulary/${id}`, {
       method: 'PUT',
@@ -145,8 +171,7 @@ function VocabularyList() {
       },
       body: JSON.stringify(vocabulary)
     })
-    handleClose();
-  };
+  }; 
 
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -175,7 +200,7 @@ function VocabularyList() {
           </Tabs>
         </Box>
       </Box>
-    
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
           <TableBody>
@@ -205,15 +230,37 @@ function VocabularyList() {
                             turkishWord={row.word}
                             style={{ width: 50 }}
                           />
-                          <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
+
+                          <DeleteForeverIcon style={{ width: 50 }} onClick={()=>deleteDialogOpen(row.id,row.word,row.wordEng)} />
+                          <Dialog
+                            open={deleteDialog}
+                            onClose={deleteDialogClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title">
+                              {"Kelime silinecek eminmisiniz ?"}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                {willBeDeleteWord} : {willBeDeleteWordEnglish}
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={deleteDialogClose}>Vazgeç</Button>
+                              <Button onClick={handleClickDelete} autoFocus>
+                                Sil
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
                         </Stack>
                       </TableCell>
                     </TableRow>
                   )
                 }
               })}
-            
-            {emptyRows > 0  && (
+
+            {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
