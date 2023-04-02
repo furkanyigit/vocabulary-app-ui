@@ -18,17 +18,11 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { useContext } from 'react'
 import { GlobalContext } from '../context/GlobalState';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
 import wordList from '../context/GlobalState';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
-
+import CreateUpdateModal from './CreateUpdateModal';
+import Stack from '@mui/material/Stack';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -102,7 +96,6 @@ function VocabularyList() {
   const [open, setOpen] = useState(false);
   const [sayı1, setSayı1] = useState();
   const [sayı2, setSayı2] = useState();
-  const [vocablistList, setVocabList] = useState([]);
 
   const selectBox1 = () => {
     setSayı1(0);
@@ -181,71 +174,40 @@ function VocabularyList() {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
           <TableBody>
-            { 
+            {
               (rowsPerPage > 0
                 ? wordList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : wordList
-              ).map((row) => { 
-                if(sayı1 <= row.count && row.count < sayı2){
-                  return(
-                <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.word}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.wordEng}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.count}
-                </TableCell>
-                <TableCell align="right">
-                  <EditIcon style={{ width: 50 }} onClick={handleClickOpen}></EditIcon>
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {"Vocabulary Update"}
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <Box
-                          component="form"
-                          sx={{
-                            '& > :not(style)': { m: 1, width: '25ch' },
-                          }}
-                          noValidate
-                          autoComplete="off"
-                        >
-                          <TextField id="outlined-basic" label="Word" variant="outlined" value={word} onChange={(e) => setWord(e.target.value)} />
-                        </Box>
-                        <Box
-                          component="form"
-                          sx={{
-                            '& > :not(style)': { m: 1, width: '25ch' },
-                          }}
-                          noValidate
-                          autoComplete="off"
-                        >
-                          <TextField id="outlined-basic" label="WordEnglish" variant="outlined" value={wordEng} onChange={(e) => setWordEng(e.target.value)} />
-                        </Box>
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleClose}>Cancel</Button>
-                      <Button onClick={handleClickAdd} autoFocus>
-                        Update
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                  <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
-                </TableCell>
-              </TableRow>
+              ).map((row) => {
+                if (sayı1 <= row.count && row.count < sayı2) {
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell component="th" scope="row">
+                        {row.word}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="right">
+                        {row.wordEng}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="right">
+                        {row.count}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction='row'>
+                          <CreateUpdateModal
+                            type={2}
+                            header="Kelime Düzenleme"
+                            englishWord={row.wordEng}
+                            turkishWord={row.word}
+                            style={{ width: 50 }}
+                          />
+                          <DeleteForeverIcon style={{ width: 50 }}></DeleteForeverIcon>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
                   )
-              }})}
-              
+                }
+              })}
+
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
