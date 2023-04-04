@@ -22,6 +22,10 @@ import SecondBox from '../box/SecondBox';
 import ThirdBox from '../box/ThirdBox';
 import VocabularyList from '../components/VocabularyList';
 import { Route, Routes } from 'react-router-dom';
+import VocabularyHomeTitle from '../Title/VocabularyHomeTitle';
+import VocabularyListTitle from '../Title/VocabularyListTitle';
+import HomeTitle from '../Title/HomeTitle';
+import PracticTitle from '../Title/PracticTitle';
 
 
 const drawerWidth = 240;
@@ -85,7 +89,19 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+                              <div
+                // sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 10000, }}
+                >
+                  <Routes>
+                    <Route path="/" element={<HomeTitle/>} />
+                    <Route path="/vocabHome"  element={<VocabularyHomeTitle/>} />
+                    <Route path='/vocabularyList' element={<VocabularyListTitle/>} />
+                    <Route path='/practic' element={<PracticTitle />} />
+                    {/* <Route path="/firstbox" element={<FirstBox />} />
+                    <Route path='/secondbox' element={<SecondBox />} />
+                    <Route path='/thirdbox' element={<ThirdBox />} /> */}
+                  </Routes>
+                </div>
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -134,7 +150,7 @@ function DashboardContent() {
                 >
                   <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/vocabHome" element={<VocabHome />} />
+                    <Route path="/vocabHome"  element={<VocabHome header="Vocabulary Home"/>} />
                     <Route path='/practic' element={<Practic />} />
                     <Route path='/vocabularyList' element={<VocabularyList />} />
                     <Route path="/firstbox" element={<FirstBox />} />
