@@ -11,17 +11,24 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 
 function MainListItem() {
-
+  
   const [open, setOpen] = useState(false);
 
   const hanldeOpenApp = () => {
     setOpen((prevOpen) => !prevOpen);
   }
-
+  const [header, setHeader] = useState(false);
+  const kelimeUygulaması = () => {
+    setHeader("Kelime Uygulaması")
+  }
+  const Home = () => {
+    setHeader("Home")  
+  }
+  console.log(header)
   return (
     <React.Fragment>
       <Link to="/" className='Link'>
-        <ListItemButton>
+        <ListItemButton onClick={Home}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon >
@@ -37,7 +44,7 @@ function MainListItem() {
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Link to="/vocabHome" className='Link'>
-        <ListItemButton >
+        <ListItemButton onClick={kelimeUygulaması}>
           <Collapse component="li" in={open} timeout="auto">
             <ListItemText primary="Kelime Uygulaması" />
           </Collapse>
