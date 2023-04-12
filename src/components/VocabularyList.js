@@ -279,8 +279,9 @@ function VocabularyList() {
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: parseInt(wordListAllData.totalElements) }]}
                 colSpan={3}
                 count={parseInt(wordListAllData.totalElements)}
-                rowsPerPage={rowsPerPage}
+                rowsPerPage={rowsPerPage}s
                 page={page}
+                labelRowsPerPage={"Kelime sayısı"}
                 SelectProps={{
                   inputProps: {
                     'aria-label': 'rows per page',

@@ -2,7 +2,7 @@ import React from 'react'
 
 function VocabularyListTitle() {
   return (
-    <div>Vocabulary List</div>
+    <div>Kelime Listesi</div>
   )
 }
 
