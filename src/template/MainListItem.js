@@ -24,7 +24,6 @@ function MainListItem() {
   const Home = () => {
     setHeader("Home")  
   }
-  console.log(header)
   return (
     <React.Fragment>
       <Link to="/" className='Link'>

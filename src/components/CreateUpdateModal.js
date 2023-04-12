@@ -6,9 +6,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
+import { useState } from 'react';
 
-export default function CreateUpdateModal({ type, header, englishWord, turkishWord }) {
-    const [open, setOpen] = React.useState(false);
+export default function CreateUpdateModal({ id, type, header, englishWord, turkishWord }) {
+    const [open, setOpen] = useState(false);
+    const [wordEng, setWordEng] = useState(englishWord);
+    const [word, setWord] = useState(turkishWord);
+    const [WillBeUpdateId, setWillBeUpdateId] = useState(id);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -17,12 +22,37 @@ export default function CreateUpdateModal({ type, header, englishWord, turkishWo
     const handleClose = () => {
         setOpen(false);
     };
+    const handleClickAdd = () => {
+        let vocabulary = { word, wordEng }
+        fetch('http://localhost:8095/vocabulary', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vocabulary)
+        })
+        handleClose();
+    };
+    const handleClickUpdate = () => {
+        setWillBeUpdateId(id)
+        let vocabulary = { word, wordEng }
+        fetch(`http://localhost:8095/vocabulary/${WillBeUpdateId}`, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(vocabulary)
+        })
+      }; 
+    
 
     return (
         <div>
             {type == 1
                 ?
-                <Button variant="outlined" onClick={handleClickOpen}>
+                <Button variant="outlined" style={{ width: 250, height:75}} onClick={handleClickOpen}>
                     Kelime Ekle
                 </Button>
                 :
@@ -35,25 +65,32 @@ export default function CreateUpdateModal({ type, header, englishWord, turkishWo
                         autoFocus
                         margin="dense"
                         id="name"
-                        label="İnglizce"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={englishWord}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="name"
                         label="Türkçe"
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={turkishWord}
+                        value={word}
+                        onChange={(e) => setWord(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="name"
+                        label="İnglizce"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={wordEng}
+                        onChange={(e) => setWordEng(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Vazgeç</Button>
-                    <Button onClick={handleClose}>Onayla</Button>
+                    {type == 1
+                        ?
+                        <Button onClick={handleClickAdd}>Ekle</Button>
+                        :
+                        <Button onClick={handleClickUpdate}>Güncelle</Button>
+                    }
                 </DialogActions>
             </Dialog>
         </div>

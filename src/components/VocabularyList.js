@@ -18,7 +18,16 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { useState, useEffect } from 'react';
+import CreateUpdateModal from './CreateUpdateModal';
 // basic tabs
 
 function TabPanel(props) {
@@ -123,15 +132,43 @@ function VocabularyList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [count1, setCount1] = useState(0);
   const [count2, setCount2] = useState(2);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [willBeDeleteId, setWillBeDeleteId] = useState();
+  const [willBeDeleteWord, setWillBeDeleteWord] = useState();
+  const [willBeDeleteWordEnglish, setWillBeDeleteWordEnglish] = useState();
+
+  // Delete Form
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+
+  const deleteDialogOpen = (id,word, wordEng) => {
+    setDeleteDialog(true);
+    setWillBeDeleteWord(word);
+    setWillBeDeleteWordEnglish(wordEng);
+    setWillBeDeleteId(id);
+  };
+
+  const deleteDialogClose = () => {
+    setDeleteDialog(false);
+  };
+
+  const handleClickDelete = () => {
+    fetch(`http://localhost:8095/vocabulary/${willBeDeleteId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+    deleteDialogClose();
+    getVocabulary();
+  };
+
   //tabs
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   // Table
-  
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -146,29 +183,23 @@ function VocabularyList() {
     setCount1(0);
     setCount2(2)
     setPage(0);
-    console.log(count1);
-    console.log(count2);
   }
   const handleChanceBox2 = () => {
     console.log("burası calıstı box2");
     setPage(0);
     setCount1(3);
     setCount2(5);
-    console.log(count1);
-    console.log(count2);
   }
   const handleChanceBox3 = () => {
     console.log("burası calıstı box3");
     setCount1(6);
     setCount2(20);
     setPage(0);
-    console.log(count1);
-    console.log(count2);
   }
 
   useEffect(() => {
     getVocabulary()
-  }, [page, rowsPerPage, count1, count2])
+  }, [page,rowsPerPage,count2])
 
   function getVocabulary() {
     fetch(`/vocabulary/pageable?page=${page}&size=${rowsPerPage}&count1=${count1}&count2=${count2}`, {
@@ -182,45 +213,72 @@ function VocabularyList() {
         }
       )
   }
-  console.log(wordList);
-  console.log(wordListAllData);
-  console.log(count1);
-  console.log(count2);
 
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Item One" {...a11yProps(0)} onClick={handleChanceBox1} />
-            <Tab label="Item Two" {...a11yProps(1)} onClick={handleChanceBox2} />
-            <Tab label="Item Three" {...a11yProps(2)} onClick={handleChanceBox3} />
+            <Tab label="birinci torba" {...a11yProps(0)} onClick={handleChanceBox1} />
+            <Tab label="ikinci torba" {...a11yProps(1)} onClick={handleChanceBox2} />
+            <Tab label="ucuncu torba" {...a11yProps(2)} onClick={handleChanceBox3} />
           </Tabs>
         </Box>
       </Box>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
         <TableBody>
             {wordList.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
-                  {row.word}
-                </TableCell>
-                <TableCell align="right">{row.wordEng}</TableCell>
-                <TableCell align="right">{row.count}</TableCell>
-
+                <TableCell align="left" style={{ width: 250 }}>{row.word} </TableCell>
+                <TableCell align="left" style={{ width: 250 }}>{row.wordEng}</TableCell>
+                <TableCell align="left" style={{ width: 250 }}>{row.count}</TableCell>
+                <TableCell align="right" style={{ width: 100 }}>
+                        <Stack direction='row'>
+                        <CreateUpdateModal
+                            type={2}
+                            header="Kelime Düzenleme"
+                            id={row.id}
+                            englishWord={row.wordEng}
+                            turkishWord={row.word}
+                            style={{ width: 50 }}
+                          />
+                          <DeleteForeverIcon align="right" style={{ width: 50 }} onClick={()=>deleteDialogOpen(row.id,row.word,row.wordEng)} />
+                          <Dialog
+                            open={deleteDialog}
+                            onClose={deleteDialogClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title">
+                              {"Kelime silinecek eminmisiniz ?"}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                {willBeDeleteWord} : {willBeDeleteWordEnglish}
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={deleteDialogClose}>Vazgeç</Button>
+                              <Button onClick={handleClickDelete} autoFocus>
+                                Sil
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </Stack>
+                      </TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: wordListAllData.totalElements }]}
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: parseInt(wordListAllData.totalElements) }]}
                 colSpan={3}
-                count={wordListAllData.totalElements}
+                count={parseInt(wordListAllData.totalElements)}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
