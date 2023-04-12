@@ -15,22 +15,37 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { useContext } from 'react'
-import { GlobalContext } from '../context/GlobalState';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import wordList from '../context/GlobalState';
-import { useState } from 'react';
-import CreateUpdateModal from './CreateUpdateModal';
-import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useEffect } from 'react';
+import Typography from '@mui/material/Typography';
+import { useState, useEffect } from 'react';
+// basic tabs
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 function a11yProps(index) {
   return {
@@ -39,6 +54,7 @@ function a11yProps(index) {
   };
 }
 
+// table
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -100,83 +116,21 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const rows = wordList.length;
-
 function VocabularyList() {
-  const { wordList } = useContext(GlobalContext);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [willBeDeleteId, setWillBeDeleteId] = useState();
-  const [willBeDeleteWord, setWillBeDeleteWord] = useState();
-  const [willBeDeleteWordEnglish, setWillBeDeleteWordEnglish] = useState();
-  const [WillBeUpdateId, setWillBeUpdateId] = useState();
-  const [word, setWord] = useState('')
-  const [wordEng, setWordEng] = useState('')
-  //const [open, setOpen] = useState(false);
-  const [sayı1, setSayı1] = useState(0);
-  const [sayı2, setSayı2] = useState(3);
-  const [value, setValue] = useState(0);
-
-
-
-  // Delete Form
-  const [deleteDialog, setDeleteDialog] = React.useState(false);
-
-  const deleteDialogOpen = (id,word, wordEng) => {
-    setDeleteDialog(true);
-    setWillBeDeleteWord(word);
-    setWillBeDeleteWordEnglish(wordEng);
-    setWillBeDeleteId(id);
-  };
-
-  const deleteDialogClose = () => {
-    setDeleteDialog(false);
-  };
-
+  const [wordListAllData, setWordListAllData] = useState([]);
+  const [wordList, setWordList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(2);
+  const [value, setValue] = React.useState(0);
+  //tabs
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const handleClickDelete = () => {
-    fetch(`http://localhost:8095/vocabulary/${willBeDeleteId}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    })
-    deleteDialogClose();
-  };
 
-  //Gösterilecek Box
-  const selectBox1 = () => {
-    setSayı1(0);
-    setSayı2(3)
-  }
-  const selectBox2 = () => {
-    setSayı1(3);
-    setSayı2(6)
-  }
-  const selectBox3 = () => {
-    setSayı1(6);
-    setSayı2(9)
-  }
-
-  const handleClickUpdate = (id) => {
-    let vocabulary = { word, wordEng }
-    fetch(`http://localhost:8095/vocabulary/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(vocabulary)
-    })
-  }; 
-
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  // Table
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -186,92 +140,87 @@ function VocabularyList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  //BackEnd
+  const handleChanceBox1 = () => {
+    console.log("burası calıstı box1");
+    setCount1(0);
+    setCount2(2)
+    setPage(0);
+    console.log(count1);
+    console.log(count2);
+  }
+  const handleChanceBox2 = () => {
+    console.log("burası calıstı box2");
+    setPage(0);
+    setCount1(3);
+    setCount2(5);
+    console.log(count1);
+    console.log(count2);
+  }
+  const handleChanceBox3 = () => {
+    console.log("burası calıstı box3");
+    setCount1(6);
+    setCount2(20);
+    setPage(0);
+    console.log(count1);
+    console.log(count2);
+  }
 
+  useEffect(() => {
+    getVocabulary()
+  }, [page, rowsPerPage, count1, count2])
 
+  function getVocabulary() {
+    fetch(`/vocabulary/pageable?page=${page}&size=${rowsPerPage}&count1=${count1}&count2=${count2}`, {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setWordListAllData(result)
+          setWordList(result.content)
+        }
+      )
+  }
+  console.log(wordList);
+  console.log(wordListAllData);
+  console.log(count1);
+  console.log(count2);
 
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Item One" {...a11yProps(0)} onClick={selectBox1} />
-            <Tab label="Item Two" {...a11yProps(1)} onClick={selectBox2} />
-            <Tab label="Item Three" {...a11yProps(2)} onClick={selectBox3} />
+            <Tab label="Item One" {...a11yProps(0)} onClick={handleChanceBox1} />
+            <Tab label="Item Two" {...a11yProps(1)} onClick={handleChanceBox2} />
+            <Tab label="Item Three" {...a11yProps(2)} onClick={handleChanceBox3} />
           </Tabs>
         </Box>
       </Box>
-
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 1000 }} aria-label="custom pagination table">
-          <TableBody>
-            {
-              (rowsPerPage > 0
-                ? wordList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : wordList
-              ).map((row) => {
-                if (sayı1 <= row.count && row.count < sayı2) {
-                  return (
-                    <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
-                        {row.word}
-                      </TableCell>
-                      <TableCell style={{ width: 160 }} align="right">
-                        {row.wordEng}
-                      </TableCell>
-                      <TableCell style={{ width: 160 }} align="right">
-                        {row.count}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Stack direction='row'>
-                          <CreateUpdateModal
-                            type={2}
-                            header="Kelime Düzenleme"
-                            englishWord={row.wordEng}
-                            turkishWord={row.word}
-                            style={{ width: 50 }}
-                          />
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableBody>
+            {wordList.map((row) => (
+              <TableRow
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.word}
+                </TableCell>
+                <TableCell align="right">{row.wordEng}</TableCell>
+                <TableCell align="right">{row.count}</TableCell>
 
-                          <DeleteForeverIcon style={{ width: 50 }} onClick={()=>deleteDialogOpen(row.id,row.word,row.wordEng)} />
-                          <Dialog
-                            open={deleteDialog}
-                            onClose={deleteDialogClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                          >
-                            <DialogTitle id="alert-dialog-title">
-                              {"Kelime silinecek eminmisiniz ?"}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                {willBeDeleteWord} : {willBeDeleteWordEnglish}
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button onClick={deleteDialogClose}>Vazgeç</Button>
-                              <Button onClick={handleClickDelete} autoFocus>
-                                Sil
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  )
-                }
-              })}
-
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
               </TableRow>
-            )}
+            ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: wordListAllData.totalElements }]}
                 colSpan={3}
-                count={wordList.length}
+                count={wordListAllData.totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
@@ -291,4 +240,5 @@ function VocabularyList() {
     </>
   );
 }
-export default VocabularyList;
+
+export default VocabularyList
