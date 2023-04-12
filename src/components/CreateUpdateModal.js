@@ -45,6 +45,7 @@ export default function CreateUpdateModal({ id, type, header, englishWord, turki
           },
           body: JSON.stringify(vocabulary)
         })
+        handleClose();
       }; 
     
 

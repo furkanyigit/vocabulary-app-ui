@@ -216,12 +216,12 @@ function VocabularyList() {
 
   return (
     <>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{minWidth: 1000 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="birinci torba" {...a11yProps(0)} onClick={handleChanceBox1} />
-            <Tab label="ikinci torba" {...a11yProps(1)} onClick={handleChanceBox2} />
-            <Tab label="ucuncu torba" {...a11yProps(2)} onClick={handleChanceBox3} />
+            <Tab style={{ width: 333}} label="birinci torba" {...a11yProps(0)} onClick={handleChanceBox1} />
+            <Tab style={{ width: 333}} label="ikinci torba" {...a11yProps(1)} onClick={handleChanceBox2} />
+            <Tab style={{ width: 334}} label="ucuncu torba" {...a11yProps(2)} onClick={handleChanceBox3} />
           </Tabs>
         </Box>
       </Box>
@@ -240,7 +240,7 @@ function VocabularyList() {
                         <Stack direction='row'>
                         <CreateUpdateModal
                             type={2}
-                            header="Kelime Düzenleme"
+                            header="Kelime Güncelle"
                             id={row.id}
                             englishWord={row.wordEng}
                             turkishWord={row.word}
